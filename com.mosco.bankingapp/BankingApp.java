@@ -1,15 +1,19 @@
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 class Account {
     private String ownerName;
     private double balance;
+    private ArrayList<String> transactionHistory;
 
     private static final double MAX_TRANSACTION_AMOUNT = 10000.0;
 
     public Account(String ownerName) {
         this.ownerName = ownerName;
         this.balance = 0.0;
+        this.transactionHistory = new ArrayList<>();
+        transactionHistory.add("Account created for " + ownerName);
     }
 
     public String getOwnerName() {
@@ -32,6 +36,7 @@ class Account {
         }
 
         balance += amount;
+        transactionHistory.add("Deposited: €" + amount + " | Balance: €" + balance);
         System.out.println("Deposit successful. New balance: €" + balance);
     }
 
@@ -52,7 +57,21 @@ class Account {
         }
 
         balance -= amount;
+        transactionHistory.add("Withdrawn: €" + amount + " | Balance: €" + balance);
         System.out.println("Withdrawal successful. New balance: €" + balance);
+    }
+
+    public void printTransactionHistory() {
+        System.out.println("\n=== Transaction History ===");
+
+        if (transactionHistory.isEmpty()) {
+            System.out.println("No transactions available.");
+            return;
+        }
+
+        for (String transaction : transactionHistory) {
+            System.out.println("- " + transaction);
+        }
     }
 }
 
@@ -73,7 +92,8 @@ public class BankingApp {
             System.out.println("1. Check balance");
             System.out.println("2. Deposit money");
             System.out.println("3. Withdraw money");
-            System.out.println("4. Exit");
+            System.out.println("4. View transaction history");
+            System.out.println("5. Exit");
 
             int choice = readInt(scanner, "Choose an option: ");
 
@@ -93,12 +113,16 @@ public class BankingApp {
                     break;
 
                 case 4:
+                    account.printTransactionHistory();
+                    break;
+
+                case 5:
                     running = false;
                     System.out.println("Thank you for using Java Banking App.");
                     break;
 
                 default:
-                    System.out.println("Invalid option. Please choose between 1 and 4.");
+                    System.out.println("Invalid option. Please choose between 1 and 5.");
             }
         }
 
